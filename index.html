@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hashing Function</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
+        integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <script src="calculate_hash.js" defer></script>
+    <!-- <script src="sha-256.js" defer></script> -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: bisque;
+            font-size: 10px;
+        }
+
+        .container-flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .input-box {
+            padding: 1rem .8rem;
+            font-size: 18 px;
+            width: 500px;
+            border: 2px solid black;
+            border-radius: 3rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .btn {
+            border: 2px solid black;
+            border-radius: 3rem;
+            padding: 10px 20px;
+            height: 42px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0px 3px 20px rgba(104, 103, 103, 0.637);
+            position: relative;
+        }
+
+        .btn::before {
+            content: "";
+            height: 100%;
+            width: 100%;
+            border-radius: 3rem;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+
+        .btn:hover {
+            box-shadow: 0px 5px 20px rgba(104, 103, 103, 0.856);
+            transform: translateY(-3px);
+        }
+
+        .btn:active {
+            box-shadow: 0px 2px 20px rgba(104, 103, 103, 0.856);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-flex">
+        <input class="input-box" id="ti1" placeholder="TYPE YOR MESSAGE" />
+        <input class="input-box" id="ti2" placeholder="OUTPUT BOX" />
+
+        <button class="btn" onClick="calculateHash()">Convert into hash !</button>
+    </div>
+</body>
+
+</html>
