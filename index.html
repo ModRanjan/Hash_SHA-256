@@ -11,6 +11,8 @@
     <script src="calculate_hash.js" defer></script>
     <!-- <script src="sha-256.js" defer></script> -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@500;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -24,7 +26,9 @@
             align-items: center;
             justify-content: center;
             background-color: bisque;
+            font-family: 'Lato', sans-serif;
             font-size: 10px;
+            font-weight: 500;
         }
 
         .container-flex {
@@ -36,12 +40,11 @@
         }
 
         .input-box {
-            padding: 1rem .8rem;
-            font-size: 18 px;
+            padding: 10px 20px;
+            font-size: 20px;
             width: 500px;
             border: 2px solid black;
             border-radius: 3rem;
-            font-weight: 500;
             text-align: center;
         }
 
@@ -80,12 +83,15 @@
 </head>
 
 <body>
+
     <div class="container-flex">
+
         <input class="input-box" id="ti1" placeholder="TYPE YOR MESSAGE" />
         <input class="input-box" id="ti2" placeholder="OUTPUT BOX" />
 
         <button class="btn" onClick="calculateHash()">Convert into hash !</button>
     </div>
+
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 function calculateHash() {
     var inputMessage = document.getElementById("ti1").value;
 
-    let getMessage = messageBlock(inputMessage);
+    let getMessage = getMessageBlocks(messageBlock(inputMessage));
     console.log(getMessage)
 
     // todo: Initialize Hash Values (h)
@@ -48,74 +48,83 @@ function calculateHash() {
         "10010000101111101111111111111010", "10100100010100000110110011101011",
         "10111110111110011010001111110111", "11000110011100010111100011110010"
     ];
+    var W = new Array(64);
 
     // todo: Chunk Loop
-    // for (msg of getMessage) {
+    for (msg of getMessage) {
+        // Initialize variables a - h and set them equal to the current hash values respectively. h0 - h7
+        var a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+        var T2;
+        var T2;
 
-    let W = new Array(64);
+        // Copy the input data from step 1 into a new array where each entry is a 32-bit word:
+        var counter = 0
+        for (var i = 0; i < 64; i++) {
+            if (i < 16) {
+                W[i] = (msg.slice(counter, counter + 32));
+                counter += 32
+            }
+            else {
+                W[i] = additionMod32(additionMod32(additionMod32(S1(W[i - 2]), W[i - 7]), S0(W[i - 15])), W[i - 16]);
+            }
 
-    // Copy the input data from step 1 into a new array where each entry is a 32-bit word:
-    let counter = 0
-    for (var i = 0; i < 64; i++) {
-        if (i < 16) {
-            W[i] = (getMessage.slice(counter, counter + 32));
-            counter += 32
+            // compression cycle
+            T1 = ((parseInt(h, 2) + parseInt(Σ1(e), 2) + parseInt(Ch(e, f, g), 2) + parseInt(K[i], 2) + parseInt(W[i], 2)) % Math.pow(2, 32)).toString(2).padStart(32, "0");
+            // T1 = additionMod32(additionMod32(additionMod32(h, Σ1(e)), Ch(e, f, g)), K[i], W[i]);
+            T2 = additionMod32(Σ0(a), Maj(a, b, c));
+
+            h = g;
+            g = f;
+            f = e;
+            e = additionMod32(d, T1);
+            d = c;
+            c = b;
+            b = a;
+            a = additionMod32(T1, T2);
         }
-        else {
-            W[i] = additionMod32(additionMod32(additionMod32(S1(W[i - 2]), W[i - 7]), S0(W[i - 15])), W[i - 16]);
-        }
+
+        // compute the new intermediate hash value 
+        H[0] = additionMod32(H[0], a);
+        H[1] = additionMod32(H[1], b);
+        H[2] = additionMod32(H[2], c);
+        H[3] = additionMod32(H[3], d);
+        H[4] = additionMod32(H[4], e);
+        H[5] = additionMod32(H[5], f);
+        H[6] = additionMod32(H[6], g);
+        H[7] = additionMod32(H[7], h);
     }
-
-    // Initialize variables a - h and set them equal to the current hash values respectively. h0 - h7
-    let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
-    // compression cycle
-    var T2;
-    var T2;
-    for (let i = 0; i < 64; i++) {
-        T1 = ((parseInt(h, 2) + parseInt(Σ1(e), 2) + parseInt(Ch(e, f, g), 2) + parseInt(K[i], 2) + parseInt(W[i], 2)) % Math.pow(2, 32)).toString(2).padStart(32, "0");
-        // T1 = additionMod32(additionMod32(additionMod32(h, Σ1(e)), Ch(e, f, g)), K[i], W[i]);
-        T2 = additionMod32(Σ0(a), Maj(a, b, c));
-
-
-        h = g;
-        g = f;
-        f = e;
-        e = additionMod32(d, T1);
-        d = c;
-        c = b;
-        b = a;
-        a = additionMod32(T1, T2);
-    }
-
-    // compute the new intermediate hash value 
-    H[0] = additionMod32(H[0], a);
-
-    H[1] = additionMod32(H[1], b);
-
-    H[2] = additionMod32(H[2], c);
-
-    H[3] = additionMod32(H[3], d);
-
-    H[4] = additionMod32(H[4], e);
-
-    H[5] = additionMod32(H[5], f);
-
-    H[6] = additionMod32(H[6], g);
-
-    H[7] = additionMod32(H[7], h);
-
     console.log(convertToHex(H))
     document.getElementById("ti2").value = convertToHex(H);
 }
 
+function getMessageBlocks(str) {
+    var block = '';
+    var messageBlocks = [];
+    let i = 0;
+    while (i < str.length) {
+        block = str.slice(i, i + 512);
+        messageBlocks.push(block);
+        i += 512;
+    }
+    return messageBlocks;
+}
+
 function textToBin(text) {
-    var length = text.length,
-        output = [];
+    var length = text.length
+    var output = [];
     for (var i = 0; i < length; i++) {
-        var bin = text[i].charCodeAt().toString(2);
-        output.push(Array(8 - bin.length + 1).join("0") + bin);
+        var bin = text[i].charCodeAt(0).toString(2).padStart(8, "0");
+        output.push(bin)
+        // output.push(Array(8 - bin.length + 1).join("0") + bin);
     }
     return output.join("");
+}
+function convertToHex(arr) {
+    let result = ""
+    for (let i = 0; i < arr.length; i++) {
+        result += parseInt(arr[i], 2).toString(16)
+    }
+    return result
 }
 
 function padZero(strings, lengthM) {
@@ -132,13 +141,13 @@ function messageBlock(inputMessage) {
     // todo: Step-1: a. Convert “hello world” to binary:
     let result = textToBin(inputMessage);
     let lengthMessage = result.length
+    if (lengthMessage < 512) {
+        // todo b. Append a single 1:
+        result += "1";
 
-    // todo b. Append a single 1:
-    result += "1";
-
-    // todo c. Pad with 0’s until data is a multiple of 512, less 64 bits (448 bits in our case)::
-    result = padZero(result, lengthMessage);
-
+        // todo c. Pad with 0’s until data is a multiple of 512, less 64 bits (448 bits in our case)::
+        result = padZero(result, lengthMessage);
+    }
     // todo d. Append 64 bits to the end, where the 64 bits are a big-endian integer representing the length of the original input in binary.
     let length = lengthMessage.toString(2);
 
@@ -220,12 +229,4 @@ function additionMod32(str1, str2) {
     var num = (parseInt(str1, 2) + parseInt(str2, 2));
     var result = (num % Math.pow(2, 32)).toString(2).padStart(32, "0")
     return result;
-}
-
-function convertToHex(arr) {
-    let result = ""
-    for (let i = 0; i < arr.length; i++) {
-        result += parseInt(arr[i], 2).toString(16)
-    }
-    return result
 }
