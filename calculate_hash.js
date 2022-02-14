@@ -2,8 +2,7 @@
 function calculateHash() {
     var inputMessage = document.getElementById("ti1").value;
 
-    let getMessage = getMessageBlocks(messageBlock(inputMessage));
-    console.log(getMessage)
+    let getMessage = getMessageBlocks(inputMessage);
 
     // todo: Initialize Hash Values (h)
     let H = [
@@ -97,18 +96,6 @@ function calculateHash() {
     document.getElementById("ti2").value = convertToHex(H);
 }
 
-function getMessageBlocks(str) {
-    var block = '';
-    var messageBlocks = [];
-    let i = 0;
-    while (i < str.length) {
-        block = str.slice(i, i + 512);
-        messageBlocks.push(block);
-        i += 512;
-    }
-    return messageBlocks;
-}
-
 function textToBin(text) {
     var length = text.length
     var output = [];
@@ -134,28 +121,33 @@ function padZero(strings, lengthM) {
         strings += "0";
         k = k - 1;
     }
+
+    // adding last 64-bits
+    let lengthInBinary = l.toString(2).padStart(64, "0");
+    strings = strings + lengthInBinary
     return strings
 }
 
-function messageBlock(inputMessage) {
-    // todo: Step-1: a. Convert “hello world” to binary:
+function getMessageBlocks(inputMessage) {
+    // todo: Convert “hello world” to binary:
     let result = textToBin(inputMessage);
-    let lengthMessage = result.length
-    if (lengthMessage < 512) {
-        // todo b. Append a single 1:
-        result += "1";
-
-        // todo c. Pad with 0’s until data is a multiple of 512, less 64 bits (448 bits in our case)::
-        result = padZero(result, lengthMessage);
+    var messageBlocks = [];
+    var block = '';
+    let i = 0;
+    while (i < result.length) {
+        block = result.slice(i, i + 512);
+        if (block.length < 512) {
+            var blockLength = block.length;
+            //  Append a single 1:
+            block += "1";
+            // todo: Pad with 0’s until data is a multiple of 512, less 64 bits (448 bits in our case)
+            block = padZero(block, blockLength);
+        }
+        messageBlocks.push(block);
+        i += 512;
     }
-    // todo d. Append 64 bits to the end, where the 64 bits are a big-endian integer representing the length of the original input in binary.
-    let length = lengthMessage.toString(2);
-
-    if (length.length <= 64) {
-        return result + (length.padStart(64, "0"));
-    } else {
-        return result + length;
-    }
+    console.log(messageBlocks, messageBlocks[((messageBlocks.length)-1)].length)
+    return messageBlocks;
 }
 
 function ROTR(n, str) {

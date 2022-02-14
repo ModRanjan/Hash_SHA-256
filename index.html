@@ -47,6 +47,15 @@
             border-radius: 3rem;
             text-align: center;
         }
+        .output-box {
+            padding: 10px 20px;
+            font-size: 20px;
+            height: 40px;
+            width: 800px;
+            border: 2px solid black;
+            border-radius: 3rem;
+            text-align: center;
+        }
 
         .btn {
             border: 2px solid black;
@@ -86,8 +95,8 @@
 
     <div class="container-flex">
 
-        <input class="input-box" id="ti1" placeholder="TYPE YOR MESSAGE" />
-        <input class="input-box" id="ti2" placeholder="OUTPUT BOX" />
+        <input class="input-box" type="text" id="ti1" placeholder="TYPE YOR MESSAGE" />
+        <input class="output-box" type="text" id="ti2" placeholder="OUTPUT BOX" /> 
 
         <button class="btn" onClick="calculateHash()">Convert into hash !</button>
     </div>
