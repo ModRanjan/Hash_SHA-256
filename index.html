@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
         integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
     <script src="calculate_hash.js" defer></script>
-    <!-- <script src="sha-256.js" defer></script> -->
+    <script src="resources/web-sha-256.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@500;700&display=swap');
 
@@ -99,6 +99,7 @@
         <input class="output-box" type="text" id="ti2" placeholder="OUTPUT BOX" /> 
 
         <button class="btn" onClick="calculateHash()">Convert into hash !</button>
+        <button class="btn" onClick="calcHash()">Convert into hash (web)!</button>
     </div>
 
 </body>

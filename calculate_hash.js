@@ -1,4 +1,3 @@
-
 function calculateHash() {
     var inputMessage = document.getElementById("ti1").value;
 
